@@ -18,8 +18,8 @@ public class BookingCreateDto {
     @Future
     private LocalDateTime end;
 
-    @Positive(message = "Id не может быть отрицательным числом")
-    private Long bookerId;
+//    @Positive(message = "Id не может быть отрицательным числом")
+//    private Long bookerId;
 
     @Positive(message = "Id не может быть отрицательным числом")
     private Long itemId;

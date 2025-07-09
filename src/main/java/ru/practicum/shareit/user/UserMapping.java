@@ -3,6 +3,7 @@ package ru.practicum.shareit.user;
 import org.mapstruct.Mapper;
 import ru.practicum.shareit.user.dto.UserCreateDto;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserIdDto;
 import ru.practicum.shareit.user.dto.UserUpdateDto;
 
 @Mapper(componentModel = "spring")
@@ -13,4 +14,6 @@ public interface UserMapping {
     public User fromUpdateDto(UserUpdateDto userUpdateDto);
 
     public UserDto toDto(User user);
+
+    UserIdDto toUserIdDto(User user);
 }
