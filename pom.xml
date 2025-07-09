@@ -143,8 +143,8 @@
 				<version>9.22.3</version>
 				<configuration>
 					<url>jdbc:postgresql://localhost:5432/shareit</url>
-					<user>postgres</user>
-					<password>postgres</password>
+					<user>shareit</user>
+					<password>shareit</password>
 					<cleanDisabled>false</cleanDisabled>
 				</configuration>
 			</plugin>
