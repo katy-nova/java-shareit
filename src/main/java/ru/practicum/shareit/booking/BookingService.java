@@ -26,15 +26,19 @@ public class BookingService {
     @Transactional
     public BookingDto createBooking(BookingCreateDto createDto, Long userId) {
         Booking booking = bookingMapper.fromDto(createDto);
-        if (booking.getItem() == null || booking.getBooker() == null) {
+        boolean existsUser = userRepository.existsById(userId);
+        if (!existsUser) {
+            throw new NotFoundException("Пользователь не найден");
+        }
+        if (booking.getEnd().equals(booking.getStart())) {
+            throw new IllegalStateException("Срок аренды вещи не может быть нулевым");
+        }
+        if (booking.getItem() == null) {
             throw new NotFoundException("Некорректные данные");
         }
         boolean available = booking.getItem().getAvailable();
         if (!available) {
             throw new IllegalStateException("Вещь не доступна для бронирования");
-        }
-        if (booking.getEnd().equals(booking.getStart())) {
-            throw new IllegalStateException("Срок аренды вещи не может быть нулевым");
         }
         booking.setBooker(findUserById(userId));
         return bookingMapper.toDto(bookingRepository.save(booking));
