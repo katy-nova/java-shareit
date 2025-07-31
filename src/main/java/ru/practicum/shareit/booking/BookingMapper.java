@@ -8,7 +8,6 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoSimple;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.user.UserMapping;
-import ru.practicum.shareit.user.UserRepository;
 
 @Mapper(componentModel = "spring", uses = UserMapping.class)
 public abstract class BookingMapper {
