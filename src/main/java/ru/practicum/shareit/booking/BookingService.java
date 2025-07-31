@@ -26,15 +26,18 @@ public class BookingService {
     @Transactional
     public BookingDto createBooking(BookingCreateDto createDto, Long userId) {
         Booking booking = bookingMapper.fromDto(createDto);
+        // вот эти вот 2 проверки тут только ради того, чтобы выкидывалась 404 ошибка, потому что в обычном случае
+        // валидация будет выкидывать 400, если юзер или пользователь не будут найдены, но тогда тесты не проходят
         boolean existsUser = userRepository.existsById(userId);
         if (!existsUser) {
             throw new NotFoundException("Пользователь не найден");
         }
-        if (booking.getEnd().equals(booking.getStart())) {
-            throw new IllegalStateException("Срок аренды вещи не может быть нулевым");
-        }
         if (booking.getItem() == null) {
             throw new NotFoundException("Некорректные данные");
+        }
+        //
+        if (booking.getEnd().equals(booking.getStart())) {
+            throw new IllegalStateException("Срок аренды вещи не может быть нулевым");
         }
         boolean available = booking.getItem().getAvailable();
         if (!available) {

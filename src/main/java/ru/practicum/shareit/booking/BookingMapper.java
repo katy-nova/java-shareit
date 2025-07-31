@@ -14,12 +14,8 @@ import ru.practicum.shareit.user.UserRepository;
 public abstract class BookingMapper {
 
     @Autowired
-    UserRepository userRepository;
-
-    @Autowired
     ItemRepository itemRepository;
 
-    //@Mapping(target = "booker", expression = "java(userRepository.findById(bookingCreateDto.getBookerId()).orElse(null))")
     @Mapping(target = "item", expression = "java(itemRepository.findById(bookingCreateDto.getItemId()).orElse(null))")
     public abstract Booking fromDto(BookingCreateDto bookingCreateDto);
 

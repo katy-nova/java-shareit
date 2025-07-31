@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.booking.BookingMapper;
 import ru.practicum.shareit.booking.BookingRepository;
+import ru.practicum.shareit.booking.dto.BookingDtoSimple;
 import ru.practicum.shareit.exception.AccessDenyException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.*;
@@ -16,6 +18,7 @@ import ru.practicum.shareit.user.UserRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +31,7 @@ public class ItemService {
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final BookingMapper bookingMapper;
 
     @Transactional(readOnly = true)
     public ItemDtoWithBookings getItem(Long id, Long userId) {
@@ -51,7 +55,17 @@ public class ItemService {
 
     @Transactional(readOnly = true)
     public List<ItemDtoWithBookings> getItemsByOwnerId(Long ownerId) {
-        return itemRepository.findAllByOwnerId(ownerId).stream().map(itemMapping::toDtoWithBookings).collect(Collectors.toList());
+        List<Item> items = itemRepository.findAllByOwnerId(ownerId);
+        LocalDateTime now = LocalDateTime.now();
+        Map<Long, BookingDtoSimple> nextBookings = bookingRepository.findAllNextBookings(now, ownerId).stream().collect(Collectors.toMap(booking -> booking.getItem().getId(), bookingMapper::toDtoSimple));
+        Map<Long, BookingDtoSimple> lastBookings = bookingRepository.findAllLastBookings(now, ownerId).stream().collect(Collectors.toMap(booking -> booking.getItem().getId(), bookingMapper::toDtoSimple));
+        return items.stream().map(item -> new ItemDtoWithBookings(item.getId(),
+                        item.getName(), item.getDescription(), item.getAvailable(),
+                        item.getRequest() != null ? item.getRequest().getId() : null,
+                        nextBookings.get(item.getId()),
+                        lastBookings.get(item.getId()),
+                        item.getComments().stream().map(itemMapping::toDtoComment).toList()))
+                .toList();
     }
 
     public ItemDto createItem(ItemCreateDto itemDto, Long ownerId) {
