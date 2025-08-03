@@ -7,6 +7,8 @@ import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.User;
 
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.Set;
 
 /**
@@ -36,5 +38,16 @@ public class Item {
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Booking> bookings;
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Comment> comments;
+
+    public Booking getNextBooking() {
+        return bookings.stream().filter(booking -> booking.getStart().isAfter(LocalDateTime.now())).min(Comparator.comparing(Booking::getStart)).orElse(null);
+    }
+
+    public Booking getLastBooking() {
+        return bookings.stream().filter(booking -> booking.getEnd().isBefore(LocalDateTime.now())).max(Comparator.comparing(Booking::getStart)).orElse(null);
+    }
 
 }

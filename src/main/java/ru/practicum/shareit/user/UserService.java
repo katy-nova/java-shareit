@@ -32,8 +32,8 @@ public class UserService {
 
     public UserDto updateUser(Long id, UserUpdateDto userDto) {
         User user = findUserById(id);
-        checkEmail(userDto.getEmail());
         if (userDto.getEmail() != null && !user.getEmail().equals(userDto.getEmail())) {
+            checkEmail(userDto.getEmail());
             user.setEmail(userDto.getEmail());
         }
         if (userDto.getName() != null && !userDto.getName().equals(user.getName())) {

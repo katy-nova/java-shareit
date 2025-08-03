@@ -35,6 +35,6 @@ public class Booking {
     private Item item;
 
     @Enumerated(EnumType.ORDINAL)
-    @Column(nullable = false, columnDefinition = "integer")
+    //@Column(nullable = false, columnDefinition = "integer")
     private Status status = Status.WAITING;
 }
