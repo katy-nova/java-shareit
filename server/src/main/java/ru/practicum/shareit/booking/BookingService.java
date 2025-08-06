@@ -71,12 +71,14 @@ public class BookingService {
         List<Booking> bookings;
         LocalDateTime now = LocalDateTime.now();
         bookings = switch (status) {
-            case REJECTED -> bookingRepository.findByBookerIdAndStatusOrderByStartAsc(bookerId, Status.REJECTED, pageable);
+            case REJECTED ->
+                    bookingRepository.findByBookerIdAndStatusOrderByStartAsc(bookerId, Status.REJECTED, pageable);
             case ALL -> bookingRepository.findAllByBookerId(bookerId, pageable);
             case PAST -> bookingRepository.findByBookerIdAndEndBeforeOrderByEndAsc(bookerId, now, pageable);
             case FUTURE -> bookingRepository.findByBookerIdAndStartAfterOrderByStartAsc(bookerId, now, pageable);
             case CURRENT -> bookingRepository.findCurrentBookingsByBooker(bookerId, now, pageable);
-            case WAITING -> bookingRepository.findByBookerIdAndStatusOrderByStartAsc(bookerId, Status.WAITING, pageable);
+            case WAITING ->
+                    bookingRepository.findByBookerIdAndStatusOrderByStartAsc(bookerId, Status.WAITING, pageable);
         };
         return bookings.stream().map(bookingMapper::toDto).collect(Collectors.toList());
     }
@@ -87,12 +89,14 @@ public class BookingService {
         List<Booking> bookings;
         LocalDateTime now = LocalDateTime.now();
         bookings = switch (status) {
-            case REJECTED -> bookingRepository.findByItemOwnerIdAndStatusOrderByStartAsc(itemOwnerId, Status.REJECTED, pageable);
+            case REJECTED ->
+                    bookingRepository.findByItemOwnerIdAndStatusOrderByStartAsc(itemOwnerId, Status.REJECTED, pageable);
             case ALL -> bookingRepository.findByItemOwnerIdOrderByStartAsc(itemOwnerId, pageable);
             case PAST -> bookingRepository.findByItemOwnerIdAndEndBeforeOrderByEndAsc(itemOwnerId, now, pageable);
             case FUTURE -> bookingRepository.findByItemOwnerIdAndStartAfterOrderByStartAsc(itemOwnerId, now, pageable);
             case CURRENT -> bookingRepository.findCurrentBookingsByItemOwnerId(itemOwnerId, now, pageable);
-            case WAITING -> bookingRepository.findByItemOwnerIdAndStatusOrderByStartAsc(itemOwnerId, Status.WAITING, pageable);
+            case WAITING ->
+                    bookingRepository.findByItemOwnerIdAndStatusOrderByStartAsc(itemOwnerId, Status.WAITING, pageable);
         };
         return bookings.stream().map(bookingMapper::toDto).collect(Collectors.toList());
     }

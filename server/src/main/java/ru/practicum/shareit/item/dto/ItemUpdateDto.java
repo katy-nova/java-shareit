@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item.dto;
 
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data

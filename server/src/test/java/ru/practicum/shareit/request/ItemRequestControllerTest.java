@@ -33,13 +33,10 @@ class ItemRequestControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private final String PATH = "/requests";
-    private final String HEADER = "X-Sharer-User-Id";
-
     @Test
     void getRequestsByUserId_shouldReturnUserRequests() throws Exception {
-        mockMvc.perform(get(PATH)
-                        .header(HEADER, 2)
+        mockMvc.perform(get("/requests")
+                        .header("X-Sharer-User-Id", 2)
                         .param("from", "0")
                         .param("size", "10"))
                 .andExpect(status().isOk())
@@ -50,8 +47,8 @@ class ItemRequestControllerTest {
 
     @Test
     void getRequestsByUserId_shouldReturnEmptyListWhenNoRequests() throws Exception {
-        mockMvc.perform(get(PATH)
-                        .header(HEADER, 1)
+        mockMvc.perform(get("/requests")
+                        .header("X-Sharer-User-Id", 1)
                         .param("from", "0")
                         .param("size", "10"))
                 .andExpect(status().isOk())
@@ -61,8 +58,8 @@ class ItemRequestControllerTest {
 
     @Test
     void getAllRequestsBesidesUsers_shouldReturnOtherUsersRequests() throws Exception {
-        mockMvc.perform(get(PATH + "/all")
-                        .header(HEADER, 1)
+        mockMvc.perform(get("/requests" + "/all")
+                        .header("X-Sharer-User-Id", 1)
                         .param("from", "0")
                         .param("size", "10"))
                 .andExpect(status().isOk())
@@ -72,8 +69,8 @@ class ItemRequestControllerTest {
 
     @Test
     void getAllRequestsBesidesUsers_shouldReturnEmptyListWhenNoOtherRequests() throws Exception {
-        mockMvc.perform(get(PATH + "/all")
-                        .header(HEADER, 2)
+        mockMvc.perform(get("/requests" + "/all")
+                        .header("X-Sharer-User-Id", 2)
                         .param("from", "0")
                         .param("size", "10"))
                 .andExpect(status().isOk())
@@ -85,8 +82,8 @@ class ItemRequestControllerTest {
         ItemRequestCreateDto createDto = new ItemRequestCreateDto();
         createDto.setDescription("Нужен перфоратор");
 
-        mockMvc.perform(post(PATH)
-                        .header(HEADER, 1)
+        mockMvc.perform(post("/requests")
+                        .header("X-Sharer-User-Id", 1)
                         .content(objectMapper.writeValueAsString(createDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -97,8 +94,8 @@ class ItemRequestControllerTest {
 
     @Test
     void getRequest_shouldReturnRequestWithItems() throws Exception {
-        mockMvc.perform(get(PATH + "/1")
-                        .header(HEADER, 1))
+        mockMvc.perform(get("/requests" + "/1")
+                        .header("X-Sharer-User-Id", 1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.description").value("Нужна дрель для ремонта квартиры"))
                 .andExpect(jsonPath("$.items[0].name").value("Дрель"));
@@ -106,8 +103,8 @@ class ItemRequestControllerTest {
 
     @Test
     void getRequest_shouldReturnNotFoundWhenRequestNotExists() throws Exception {
-        mockMvc.perform(get(PATH + "/999")
-                        .header(HEADER, 1))
+        mockMvc.perform(get("/requests" + "/999")
+                        .header("X-Sharer-User-Id", 1))
                 .andExpect(status().isNotFound());
     }
 }

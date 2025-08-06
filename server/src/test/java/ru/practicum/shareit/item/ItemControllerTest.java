@@ -34,22 +34,21 @@ class ItemControllerTest {
     private ObjectMapper objectMapper;
 
     private BookingCreateDto bookingCreateDto;
-    private final String PATH = "/items";
-    private final String HEADER = "X-Sharer-User-Id";
+
 
     @Test
     void getItems() throws Exception {
-        mockMvc.perform(get(PATH)
+        mockMvc.perform(get("/items")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(HEADER, 1))
+                        .header("X-Sharer-User-Id", 1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)));
     }
 
     @Test
     void getItem() throws Exception {
-        mockMvc.perform(get(PATH + "/1")
-                        .header(HEADER, 1)
+        mockMvc.perform(get("/items" + "/1")
+                        .header("X-Sharer-User-Id", 1)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Дрель"));
@@ -60,7 +59,7 @@ class ItemControllerTest {
         ItemUpdateDto itemUpdateDto = new ItemUpdateDto();
         itemUpdateDto.setAvailable(true);
         itemUpdateDto.setName("New Name");
-        mockMvc.perform(patch(PATH + "/1").contentType(MediaType.APPLICATION_JSON).header(HEADER, 1).content(objectMapper.writeValueAsString(itemUpdateDto)))
+        mockMvc.perform(patch("/items" + "/1").contentType(MediaType.APPLICATION_JSON).header("X-Sharer-User-Id", 1).content(objectMapper.writeValueAsString(itemUpdateDto)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("New Name"));
     }
@@ -71,25 +70,25 @@ class ItemControllerTest {
         itemCreateDto.setAvailable(true);
         itemCreateDto.setName("New Name");
         itemCreateDto.setDescription("New Description");
-        mockMvc.perform(post(PATH)
+        mockMvc.perform(post("/items")
                         .content(objectMapper.writeValueAsString(itemCreateDto))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(HEADER, 1))
+                        .header("X-Sharer-User-Id", 1))
                 .andExpect(status().isCreated());
     }
 
     @Test
     void deleteItem() throws Exception {
-        mockMvc.perform(delete(PATH + "/1")
-                        .header(HEADER, 1))
+        mockMvc.perform(delete("/items" + "/1")
+                        .header("X-Sharer-User-Id", 1))
                 .andExpect(status().isNoContent());
     }
 
     @Test
     void search() throws Exception {
-        mockMvc.perform(get(PATH + "/search?text=дрел")
+        mockMvc.perform(get("/items" + "/search?text=дрел")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(HEADER, 1L))
+                        .header("X-Sharer-User-Id", 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name").value("Дрель"));
@@ -99,8 +98,8 @@ class ItemControllerTest {
     void postComment() throws Exception {
         CommentCreateDto commentCreateDto = new CommentCreateDto();
         commentCreateDto.setText("New Comment");
-        mockMvc.perform(post(PATH + "/5/comment")
-                        .header(HEADER, 1)
+        mockMvc.perform(post("/items" + "/5/comment")
+                        .header("X-Sharer-User-Id", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(commentCreateDto)))
                 .andExpect(status().isCreated());
@@ -108,9 +107,9 @@ class ItemControllerTest {
 
     @Test
     void getComments() throws Exception {
-        mockMvc.perform(get(PATH + "/1/comment")
+        mockMvc.perform(get("/items" + "/1/comment")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(HEADER, 1))
+                        .header("X-Sharer-User-Id", 1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
     }

@@ -35,8 +35,6 @@ class BookingControllerTest {
     private ObjectMapper objectMapper;
 
     private BookingCreateDto bookingCreateDto;
-    private final String PATH = "/bookings";
-    private final String HEADER = "X-Sharer-User-Id";
 
     @BeforeEach
     void setUp() {
@@ -49,9 +47,9 @@ class BookingControllerTest {
         bookingCreateDto.setStart(LocalDateTime.now().plusDays(1));
         bookingCreateDto.setEnd(LocalDateTime.now().plusDays(2));
         String json = objectMapper.writeValueAsString(bookingCreateDto);
-        mockMvc.perform(post(PATH)
+        mockMvc.perform(post("/bookings")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(HEADER, 2L)
+                        .header("X-Sharer-User-Id", 2L)
                         .content(json))
                 .andExpect(status().isOk());
     }
@@ -61,9 +59,9 @@ class BookingControllerTest {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("bookingId", String.valueOf(5L));
         params.add("approved", String.valueOf(true));
-        mockMvc.perform(patch(PATH + "/5")
+        mockMvc.perform(patch("/bookings" + "/5")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(HEADER, 3L)
+                        .header("X-Sharer-User-Id", 3L)
                         .params(params))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("APPROVED"))
@@ -72,9 +70,9 @@ class BookingControllerTest {
 
     @Test
     void getBooking() throws Exception {
-        mockMvc.perform(get(PATH + "/5")
+        mockMvc.perform(get("/bookings" + "/5")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(HEADER, 3L))
+                        .header("X-Sharer-User-Id", 3L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("WAITING"))
                 .andExpect(jsonPath("$.item.name").value("Гитара"));
@@ -84,7 +82,7 @@ class BookingControllerTest {
     void getBookingsByBookerId() throws Exception {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("state", "ALL");
-        mockMvc.perform(get(PATH).params(params).header(HEADER, 1L).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/bookings").params(params).header("X-Sharer-User-Id", 1L).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(3)))
@@ -104,7 +102,7 @@ class BookingControllerTest {
 
     @Test
     void getBookingsByItemOwnerId() throws Exception {
-        mockMvc.perform(get(PATH + "/owner").header(HEADER, 1L).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/bookings" + "/owner").header("X-Sharer-User-Id", 1L).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)))
