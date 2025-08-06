@@ -12,8 +12,6 @@ import ru.practicum.shareit.item.dto.CommentCreateDto;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
 
-import java.util.List;
-
 @Controller
 @RequestMapping(path = "/items")
 @RequiredArgsConstructor
@@ -69,8 +67,8 @@ public class ItemController {
     @PostMapping("/{itemId}/comment")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Object> postComment(@PathVariable Long itemId,
-                                  @RequestHeader("X-Sharer-User-Id") Long userId,
-                                  @RequestBody CommentCreateDto text) {
+                                              @RequestHeader("X-Sharer-User-Id") Long userId,
+                                              @RequestBody CommentCreateDto text) {
         log.info("Posting comment {}", text);
         return itemClient.postComment(itemId, userId, text);
     }
