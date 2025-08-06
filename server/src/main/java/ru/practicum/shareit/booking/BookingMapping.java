@@ -10,7 +10,7 @@ import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.user.UserMapping;
 
 @Mapper(componentModel = "spring", uses = UserMapping.class)
-public abstract class BookingMapper {
+public abstract class BookingMapping {
 
     @Autowired
     ItemRepository itemRepository;

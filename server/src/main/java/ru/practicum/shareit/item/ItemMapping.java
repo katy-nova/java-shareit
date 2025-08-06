@@ -3,14 +3,14 @@ package ru.practicum.shareit.item;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.practicum.shareit.booking.BookingMapper;
+import ru.practicum.shareit.booking.BookingMapping;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.request.ItemRequestRepository;
 
-@Mapper(componentModel = "spring", uses = BookingMapper.class)
+@Mapper(componentModel = "spring", uses = BookingMapping.class)
 public abstract class ItemMapping {
 
     @Autowired

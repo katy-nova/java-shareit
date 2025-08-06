@@ -22,12 +22,12 @@ import java.util.stream.Collectors;
 public class BookingService {
 
     private final BookingRepository bookingRepository;
-    private final BookingMapper bookingMapper;
+    private final BookingMapping bookingMapping;
     private final UserRepository userRepository;
 
     @Transactional
     public BookingDto createBooking(BookingCreateDto createDto, Long userId) {
-        Booking booking = bookingMapper.fromDto(createDto);
+        Booking booking = bookingMapping.fromDto(createDto);
         // вот эти вот 2 проверки тут только ради того, чтобы выкидывалась 404 ошибка, потому что в обычном случае
         // валидация будет выкидывать 400, если юзер или пользователь не будут найдены, но тогда тесты не проходят
         boolean existsUser = userRepository.existsById(userId);
@@ -46,7 +46,7 @@ public class BookingService {
             throw new IllegalStateException("Вещь не доступна для бронирования");
         }
         booking.setBooker(findUserById(userId));
-        return bookingMapper.toDto(bookingRepository.save(booking));
+        return bookingMapping.toDto(bookingRepository.save(booking));
     }
 
     @Transactional
@@ -58,11 +58,11 @@ public class BookingService {
         } else {
             booking.setStatus(Status.REJECTED);
         }
-        return bookingMapper.toDto(bookingRepository.save(booking));
+        return bookingMapping.toDto(bookingRepository.save(booking));
     }
 
     public BookingDto getBooking(Long id) {
-        return bookingMapper.toDto(findBooking(id));
+        return bookingMapping.toDto(findBooking(id));
     }
 
     public List<BookingDto> getBookingByBookerIdAndStatus(Long bookerId, BookingState status, Integer from, Integer size) {
@@ -80,7 +80,7 @@ public class BookingService {
             case WAITING ->
                     bookingRepository.findByBookerIdAndStatusOrderByStartAsc(bookerId, Status.WAITING, pageable);
         };
-        return bookings.stream().map(bookingMapper::toDto).collect(Collectors.toList());
+        return bookings.stream().map(bookingMapping::toDto).collect(Collectors.toList());
     }
 
     public List<BookingDto> getBookingByItemOwnerIdAndStatus(Long itemOwnerId, BookingState status, Integer from, Integer size) {
@@ -98,7 +98,7 @@ public class BookingService {
             case WAITING ->
                     bookingRepository.findByItemOwnerIdAndStatusOrderByStartAsc(itemOwnerId, Status.WAITING, pageable);
         };
-        return bookings.stream().map(bookingMapper::toDto).collect(Collectors.toList());
+        return bookings.stream().map(bookingMapping::toDto).collect(Collectors.toList());
     }
 
     private Booking findBooking(Long id) {
