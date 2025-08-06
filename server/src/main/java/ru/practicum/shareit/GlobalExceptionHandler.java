@@ -13,26 +13,6 @@ import ru.practicum.shareit.exception.NotFoundException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-//    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-//        List<String> errors = ex.getBindingResult().getAllErrors()
-//                .stream()
-//                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-//                .collect(Collectors.toList());
-//
-//        Map<String, Object> responseBody = new HashMap<>();
-//        responseBody.put("errors", errors);
-//
-//        return ResponseEntity.badRequest()
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .body(responseBody);
-//    }
-//
-//    @ExceptionHandler(NoSuchElementException.class)
-//    public ResponseEntity<ErrorResponse> handleResourceNotFound(NoSuchElementException ex) {
-//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(ex.getMessage()));
-//    }
-
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<ErrorResponse> handleIllegalState(IllegalStateException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ex.getMessage()));
