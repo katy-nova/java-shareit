@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.HttpHeaders;
 
 @Controller
 @RequestMapping(path = "/requests")
@@ -20,14 +21,14 @@ public class RequestController {
     private final RequestClient requestClient;
 
     @GetMapping
-    public ResponseEntity<Object> getUsersRequests(@RequestHeader("X-Sharer-User-Id") Long userId,
+    public ResponseEntity<Object> getUsersRequests(@RequestHeader(HttpHeaders.X_SHARER_USER_ID) Long userId,
                                                    @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                    @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         return requestClient.getUsersRequests(userId, from, size);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Object> getRequestsBesidesUsers(@RequestHeader("X-Sharer-User-Id") Long userId,
+    public ResponseEntity<Object> getRequestsBesidesUsers(@RequestHeader(HttpHeaders.X_SHARER_USER_ID) Long userId,
                                                           @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                           @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         return requestClient.getIRequestsBesidesUsers(userId, from, size);
@@ -40,7 +41,7 @@ public class RequestController {
 
     @PostMapping
     public ResponseEntity<Object> createRequest(@Valid @RequestBody ItemRequestCreateDto request,
-                                                @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                                @RequestHeader(HttpHeaders.X_SHARER_USER_ID) Long userId) {
         return requestClient.createRequest(userId, request);
     }
 }
